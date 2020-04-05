@@ -230,13 +230,23 @@ func SignPKCS1v15(message, hashName, privateKey *C.char) *C.char {
 }
 
 //export SignPSS
-func SignPSS(message, hashName, saltLengthName, privateKey *C.char) *C.char {
+func SignPSSString(message, hashName, saltLengthName, privateKey *C.char) *C.char {
 	result, err := instance.SignPSS(C.GoString(message), C.GoString(hashName), C.GoString(saltLengthName), C.GoString(privateKey))
 	if err != nil {
 		errorThrow(err)
 		return nil
 	}
 	return C.CString(result)
+}
+
+//export SignPSS
+func SignPSSBytes(message, hashName, saltLengthName, privateKey *C.char) []byte {
+	result, err := instance.SignPSS(message, C.GoString(hashName), C.GoString(saltLengthName), C.GoString(privateKey))
+	if err != nil {
+		errorThrow(err)
+		return nil
+	}
+	return result
 }
 
 //export VerifyPKCS1v15
